@@ -2,6 +2,8 @@ server:
   port: 8080
 
 spring:
+  application:
+    name: CATALOGUE-SERVICE
   h2:
     console:
       enabled: true

@@ -18,7 +18,7 @@ public class InventoryService {
 
     public Inventory getInventoryOfProduct(int productId) {
         return restTemplate
-                    .getForObject("http://localhost:8082/api/search/product/"+productId,
+                    .getForObject("http://PRODUCT-SEARCH-SERVICE/api/search/product/"+productId,
                             Inventory.class);
     }
 
