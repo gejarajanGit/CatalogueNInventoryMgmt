@@ -15,28 +15,27 @@ public class InventoryController {
     @Autowired
     InventoryService inventoryService;
 
-    @GetMapping("/products/{pid}")
+    @GetMapping("/products/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Inventory> getInventoryOfProduct(Long pid){
-        return inventoryService.getInventoryOfProduct(pid);
+    public Inventory getInventoryOfProduct(@PathVariable int productId){
+        return inventoryService.getInventoryOfProduct(productId);
     }
 
-    @PutMapping("/addProductCount")
-    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/addProductCount")
     public void addInventory(@RequestBody Inventory inventory){
         inventoryService.addInventory(inventory);
     }
 
-    @PutMapping("/addProductsCount")
-    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/addProductsCount")
     public void addInventory(@RequestBody List<Inventory> inventory){
         inventoryService.addInventory(inventory);
     }
 
     @PostMapping("/reduceProductCount")
     @ResponseStatus(HttpStatus.OK)
-    public void reduceProductInventory(@RequestBody Inventory inventory){
+    public void reduceProductInventory(int productId, int count){
+        Inventory inventory = getInventoryOfProduct(productId);
+        inventory.setQuantity(inventory.getQuantity()-count);
         inventoryService.reduceInventory(inventory);
     }
-
 }

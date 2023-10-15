@@ -20,7 +20,7 @@ public class Inventory {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private int productId;
-    private int productName;
+    private String productName;
     private int quantity;
     private String productLocation;
 }
