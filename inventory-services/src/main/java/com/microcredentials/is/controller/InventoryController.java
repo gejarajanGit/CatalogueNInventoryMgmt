@@ -2,6 +2,7 @@ package com.microcredentials.is.controller;
 
 import com.microcredentials.is.model.Inventory;
 import com.microcredentials.is.service.InventoryService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +18,13 @@ public class InventoryController {
 
     @GetMapping("/products/{productId}")
     @ResponseStatus(HttpStatus.OK)
+    @CircuitBreaker(name="inventory", fallbackMethod = "fallBackMethod")
     public Inventory getInventoryOfProduct(@PathVariable int productId){
         return inventoryService.getInventoryOfProduct(productId);
+    }
+
+    public Inventory fallBackMethod(int productId, RuntimeException runtimeException){
+        return new Inventory();
     }
 
     @PostMapping("/addProductCount")
