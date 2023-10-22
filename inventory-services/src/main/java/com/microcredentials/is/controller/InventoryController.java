@@ -4,6 +4,7 @@ import com.microcredentials.is.model.Inventory;
 import com.microcredentials.is.service.InventoryService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,10 +17,14 @@ public class InventoryController {
     @Autowired
     InventoryService inventoryService;
 
+    @Value("${server.port}")
+    private String port;
+
     @GetMapping("/products/{productId}")
     @ResponseStatus(HttpStatus.OK)
     @CircuitBreaker(name="inventory", fallbackMethod = "fallBackMethod")
     public Inventory getInventoryOfProduct(@PathVariable int productId){
+        System.out.println("Running on port # " + port);
         return inventoryService.getInventoryOfProduct(productId);
     }
 

@@ -1,0 +1,53 @@
+version: '3.8'
+services:
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.9-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  eureka-service-registry:
+    build: ./eureka-service-registry
+    container_name: eureka-service-registry
+    ports:
+      - "8761:8761"
+    volumes:
+      - ./eureka-service-registry:/opt
+  cloud-config-service:
+    build: ./cloud-config-service
+    container_name: cloud-config-service
+    ports:
+      - "9296:9296"
+    volumes:
+      - ./cloud-config-service:/opt
+    depends_on:
+      - eureka-service-registry
+  catalogue-service:
+    build: ./catalogue-service
+    container_name: catalogue-service
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./catalogue-service:/opt
+    depends_on:
+      - eureka-service-registry
+  product-search-service:
+    build: ./product-search-service
+    container_name: product-search-service
+    ports:
+      - "8082:8082"
+    volumes:
+      - ./product-search-service:/opt
+    depends_on:
+      - eureka-service-registry
+      - rabbitmq
+  inventory-service:
+    build: ./inventory-service
+    container_name: inventory-service
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./inventory-service:/opt
+    depends_on:
+      - eureka-service-registry
+      - rabbitmq

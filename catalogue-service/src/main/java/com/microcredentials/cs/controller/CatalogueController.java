@@ -5,6 +5,7 @@ import com.microcredentials.cs.repository.CatalogueRepository;
 import com.microcredentials.cs.service.CatalogueService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,6 +14,9 @@ import java.util.List;
 @RequestMapping("/api/catalogue")
 @RequiredArgsConstructor
 public class CatalogueController {
+
+    @Value("${server.port}")
+    String port;
 
     @Autowired
     CatalogueService catalogueService;
@@ -34,6 +38,7 @@ public class CatalogueController {
 
     @GetMapping("/product")
     public ProductCatalogue getProductByBrandAndColor(String brand, String color){
+        System.out.println("Running in port : #" + port);
         return catalogueService.getProduct(brand, color);
     }
 
