@@ -31,7 +31,7 @@ public class CatalogueService {
         return catalogueRepository.findByBrandAndColor(brand, color);
     }
 
-    public void addProductCatalogue(ProductCatalogue productCatalogue) {
-        catalogueRepository.save(productCatalogue);
+    public ProductCatalogue addProductCatalogue(ProductCatalogue productCatalogue) {
+        return catalogueRepository.save(productCatalogue);
     }
 }

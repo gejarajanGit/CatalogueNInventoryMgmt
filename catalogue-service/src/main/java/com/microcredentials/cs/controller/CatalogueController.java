@@ -43,7 +43,7 @@ public class CatalogueController {
     }
 
     @PostMapping("/addProduct")
-    public void addProduct(@RequestBody ProductCatalogue productCatalogue){
-        catalogueService.addProductCatalogue(productCatalogue);
+    public ProductCatalogue addProduct(@RequestBody ProductCatalogue productCatalogue){
+        return catalogueService.addProductCatalogue(productCatalogue);
     }
 }

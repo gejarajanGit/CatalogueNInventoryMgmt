@@ -3,7 +3,7 @@ WORKDIR /opt
 ENV PORT 8080
 EXPOSE 8080
 COPY target/*.jar /opt/app.jar
-ENTRYPOINT exec java $JAVA_OPTS -jar app.jar
+ENTRYPOINT exec java -Dserver.port=8080 -jar app.jar
 
 #FROM maven:3.9.5-amazoncorretto-17
 #WORKDIR /app

@@ -33,20 +33,22 @@ public class InventoryController {
     }
 
     @PostMapping("/addProductCount")
-    public void addInventory(@RequestBody Inventory inventory){
-        inventoryService.addInventory(inventory);
+    public Inventory addInventory(@RequestBody Inventory inventory){
+        return inventoryService.addInventory(inventory);
     }
 
     @PostMapping("/addProductsCount")
-    public void addInventory(@RequestBody List<Inventory> inventory){
-        inventoryService.addInventory(inventory);
+    public String addInventory(@RequestBody List<Inventory> inventoryList){
+        inventoryService.addInventory(inventoryList);
+        return "Added the Inventory list";
     }
 
     @PostMapping("/reduceProductCount")
     @ResponseStatus(HttpStatus.OK)
-    public void reduceProductInventory(int productId, int count){
+    public String reduceProductInventory(int productId, int count){
         Inventory inventory = getInventoryOfProduct(productId);
         inventory.setQuantity(inventory.getQuantity()-count);
         inventoryService.reduceInventory(inventory);
+        return "Updated the reduction in count";
     }
 }

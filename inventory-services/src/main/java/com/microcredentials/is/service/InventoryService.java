@@ -22,8 +22,9 @@ public class InventoryService {
                             Inventory.class);
     }
 
-    public void addInventory(Inventory inventory) {
+    public Inventory addInventory(Inventory inventory) {
         publishMessage(inventory);
+        return inventory;
     }
 
     public void addInventory(List<Inventory> inventoryList) {
