@@ -13,28 +13,18 @@ services:
     image: gejarajandocker/cloud-config-server:0.0.1
     ports:
       - "9296:9296"
-#    environment:
-#      - eureka.client.serviceUrl.defaultZone=http://host.docker.internal:8761/eureka/
-#      - eureka.instance.hostname=host.docker.internal
     depends_on:
       - eureka-service-registry
   catalogue-service:
     image: gejarajandocker/catalogue-service:0.0.1
     ports:
       - "8080:8080"
-#    environment:
-#      - eureka.client.serviceUrl.defaultZone=http://host.docker.internal:8761/eureka/
-#      - eureka.instance.hostname=host.docker.internal
     depends_on:
       - eureka-service-registry
   inventory-service:
     image: gejarajandocker/inventory-service:0.0.1
     ports:
       - "8081:8081"
-#    environment:
-#      - eureka.client.serviceUrl.defaultZone=http://host.docker.internal:8761/eureka/
-#      - eureka.instance.hostname=host.docker.internal
-#      - AMQP_URL=amqp://guest:guest@rabbitmq:5672
     depends_on:
       - eureka-service-registry
       - product-search-service
@@ -43,10 +33,6 @@ services:
     image: gejarajandocker/product-search-servicee:0.0.1
     ports:
       - "8082:8082"
-#    environment:
-#      - eureka.client.serviceUrl.defaultZone=http://host.docker.internal:8761/eureka/
-#      - eureka.instance.hostname=host.docker.internal
-#      - AMQP_URL=amqp://guest:guest@rabbitmq:5672
     depends_on:
       - eureka-service-registry
       - catalogue-service
