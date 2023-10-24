@@ -1,58 +1,53 @@
 version: '3.8'
 services:
   rabbitmq:
-    container_name: rabbitmq
     image: rabbitmq:3.9-management
     ports:
       - "5672:5672"
       - "15672:15672"
   eureka-service-registry:
     image: gejarajandocker/eureka-service-registry:0.0.1
-#    build: ./eureka-service-registry
-    container_name: eureka-service-registry
     ports:
       - "8761:8761"
-#    volumes:
-#      - ./eureka-service-registry:/opt
-  cloud-config-service:
-#    build: ./cloud-config-service
-    container_name: cloud-config-service
-    image: gejarajandocker/cloud-config-service:0.0.1
+  cloud-config-server:
+    image: gejarajandocker/cloud-config-server:0.0.1
     ports:
       - "9296:9296"
-#    volumes:
-#      - ./cloud-config-service:/opt
+#    environment:
+#      - eureka.client.serviceUrl.defaultZone=http://host.docker.internal:8761/eureka/
+#      - eureka.instance.hostname=host.docker.internal
     depends_on:
       - eureka-service-registry
   catalogue-service:
-#    build: ./catalogue-service
-    container_name: catalogue-service
     image: gejarajandocker/catalogue-service:0.0.1
     ports:
       - "8080:8080"
-#    volumes:
-#      - ./catalogue-service:/opt
+#    environment:
+#      - eureka.client.serviceUrl.defaultZone=http://host.docker.internal:8761/eureka/
+#      - eureka.instance.hostname=host.docker.internal
     depends_on:
       - eureka-service-registry
   inventory-service:
-    #    build: ./inventory-service
-    container_name: inventory-service
     image: gejarajandocker/inventory-service:0.0.1
     ports:
       - "8081:8081"
-    #    volumes:
-    #      - ./inventory-service:/opt
+#    environment:
+#      - eureka.client.serviceUrl.defaultZone=http://host.docker.internal:8761/eureka/
+#      - eureka.instance.hostname=host.docker.internal
+#      - AMQP_URL=amqp://guest:guest@rabbitmq:5672
     depends_on:
       - eureka-service-registry
+      - product-search-service
       - rabbitmq
   product-search-service:
-#    build: ./product-search-service
-    container_name: product-search-service
     image: gejarajandocker/product-search-servicee:0.0.1
     ports:
       - "8082:8082"
-#    volumes:
-#      - ./product-search-service:/opt
+#    environment:
+#      - eureka.client.serviceUrl.defaultZone=http://host.docker.internal:8761/eureka/
+#      - eureka.instance.hostname=host.docker.internal
+#      - AMQP_URL=amqp://guest:guest@rabbitmq:5672
     depends_on:
       - eureka-service-registry
+      - catalogue-service
       - rabbitmq
