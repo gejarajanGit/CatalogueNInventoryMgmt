@@ -6,6 +6,7 @@ import com.microcredentials.is.mq.MQConfig;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
@@ -24,10 +25,9 @@ public class InventoryService {
                     .getForObject("http://PRODUCT-SEARCH-SERVICE/api/search/product/"+productId,
                             Inventory.class);
         }catch(Exception ex){
-            throw new InventoryNotFoundException("No inventory found with product Id " + productId);
+            if(((HttpClientErrorException.NotFound)ex).getStatusCode().value() == 404)
+                throw new InventoryNotFoundException("No inventory found with product id " + productId);
         }
-        if(inventory==null)
-            throw new InventoryNotFoundException("No inventory found with product Id " + productId);
         return inventory;
     }
 

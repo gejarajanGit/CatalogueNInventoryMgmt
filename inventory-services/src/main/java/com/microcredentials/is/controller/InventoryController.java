@@ -35,9 +35,11 @@ public class InventoryController {
         return inventoryService.getInventoryOfProduct(productId);
     }
 
-    public Inventory fallBackMethod(int productId, RuntimeException runtimeException){
+    public Inventory fallBackMethod(int productId, RuntimeException runtimeException) throws InventoryNotFoundException {
         LOGGER.info("Fallback method has been called");
         System.out.println("Fallback method has been called");
+        if(runtimeException.getMessage()!=null)
+            throw new InventoryNotFoundException("Waiting for the service to get back online. Please try sometime later till the service comes up alive :(");
         return new Inventory();
     }
 
