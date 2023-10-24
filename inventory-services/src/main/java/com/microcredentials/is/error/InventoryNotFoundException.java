@@ -1,6 +1,6 @@
 package com.microcredentials.is.error;
 
-public class InventoryNotFoundException extends Exception{
+public class InventoryNotFoundException extends Exception {
     public InventoryNotFoundException() {
         super();
     }

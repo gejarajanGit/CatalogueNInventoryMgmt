@@ -24,29 +24,29 @@ public class ProductSearchService {
 
     public List<Inventory> getProducts() throws ProductNotFoundException {
         List<Inventory> inventoryList = inventoryRepository.findAll();
-        if (inventoryList.size()==0)
+        if (inventoryList.size() == 0)
             throw new ProductNotFoundException("No product found currently :(");
         return inventoryList;
     }
 
     public List<Inventory> getProductsInHand() throws ProductNotFoundException {
         List<Inventory> inventoryList = getProducts().stream()
-                .filter(inventory -> inventory.getQuantity()>0)
+                .filter(inventory -> inventory.getQuantity() > 0)
                 .collect(Collectors.toList());
-        if (inventoryList.size()==0)
+        if (inventoryList.size() == 0)
             throw new ProductNotFoundException("No in-hand product found currently :(");
         return inventoryList;
     }
 
     public Inventory getProductById(int productId) throws ProductNotFoundException {
         Optional<Inventory> inventory = inventoryRepository.findByProductId(productId);
-        if(!inventory.isPresent())
+        if (!inventory.isPresent())
             throw new ProductNotFoundException("No product found with product Id: " + productId + " :(");
         return inventory.get();
     }
 
     @RabbitListener(queues = MQConfig.QUEUE)
-    public void listener(Inventory inventory){
+    public void listener(Inventory inventory) {
         System.out.println("Message received");
         inventoryRepository.save(inventory);
         System.out.println("Message persisted");
@@ -54,14 +54,14 @@ public class ProductSearchService {
 
     public ProductCatalogue getProductCatalogue(String brand, String color) throws ProductNotFoundException {
         ProductCatalogue productCatalogue = null;
-        try{
+        try {
             productCatalogue = restTemplate
-                    .getForObject("http://CATALOGUE-SERVICE/api/catalogue/product?brand="+brand+"&color="+color,
+                    .getForObject("http://CATALOGUE-SERVICE/api/catalogue/product?brand=" + brand + "&color=" + color,
                             ProductCatalogue.class);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             throw new ProductNotFoundException("No Catalogue found with the brand : " + brand + " and color : " + color + " :(");
         }
-        if(productCatalogue==null)
+        if (productCatalogue == null)
             throw new ProductNotFoundException("No Catalogue found with the brand : " + brand + " and color : " + color + " :(");
         return productCatalogue;
     }

@@ -15,17 +15,17 @@ public class MQConfig {
     public static final String ROUTING_KEY = "message_routingKey";
 
     @Bean
-    public Queue queue(){
+    public Queue queue() {
         return new Queue(QUEUE);
     }
 
     @Bean
-    public TopicExchange exchange(){
+    public TopicExchange exchange() {
         return new TopicExchange(EXCHANGE);
     }
 
     @Bean
-    public Binding binding(Queue queue, TopicExchange exchange){
+    public Binding binding(Queue queue, TopicExchange exchange) {
         return BindingBuilder
                 .bind(queue)
                 .to(exchange)
@@ -33,12 +33,12 @@ public class MQConfig {
     }
 
     @Bean
-    public Jackson2JsonMessageConverter messageConvertor(){
+    public Jackson2JsonMessageConverter messageConvertor() {
         return new Jackson2JsonMessageConverter();
     }
 
     @Bean
-    public AmqpTemplate template(ConnectionFactory factory){
+    public AmqpTemplate template(ConnectionFactory factory) {
         RabbitTemplate template = new RabbitTemplate(factory);
         template.setMessageConverter(messageConvertor());
         return template;

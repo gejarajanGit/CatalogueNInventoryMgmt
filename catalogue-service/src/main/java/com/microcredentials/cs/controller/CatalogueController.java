@@ -52,7 +52,7 @@ public class CatalogueController {
     }
 
     @PostMapping("/addProduct")
-    public ProductCatalogue addProduct(@RequestBody ProductCatalogue productCatalogue){
+    public ProductCatalogue addProduct(@RequestBody ProductCatalogue productCatalogue) {
         LOGGER.info("");
         return catalogueService.addProductCatalogue(productCatalogue);
     }

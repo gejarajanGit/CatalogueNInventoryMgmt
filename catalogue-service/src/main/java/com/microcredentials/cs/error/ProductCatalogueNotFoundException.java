@@ -1,6 +1,6 @@
 package com.microcredentials.cs.error;
 
-public class ProductCatalogueNotFoundException extends Exception{
+public class ProductCatalogueNotFoundException extends Exception {
     public ProductCatalogueNotFoundException() {
         super();
     }

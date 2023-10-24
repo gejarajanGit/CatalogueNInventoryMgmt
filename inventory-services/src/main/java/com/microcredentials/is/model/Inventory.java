@@ -10,7 +10,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(includeFieldNames=true)
+@ToString(includeFieldNames = true)
 public class Inventory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

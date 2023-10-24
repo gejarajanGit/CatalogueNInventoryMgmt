@@ -1,6 +1,6 @@
 package com.microcredentials.pss.error;
 
-public class ProductNotFoundException  extends Exception{
+public class ProductNotFoundException extends Exception {
     public ProductNotFoundException() {
         super();
     }

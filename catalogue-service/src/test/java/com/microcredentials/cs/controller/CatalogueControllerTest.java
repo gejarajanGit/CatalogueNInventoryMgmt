@@ -37,19 +37,19 @@ class CatalogueControllerTest {
     @BeforeEach
     void setUp() {
         productCatalogue = ProductCatalogue.builder()
-                                            .id(1L)
-                                            .manufactureYear("2023")
-                                            .depth(5)
-                                            .name("TV")
-                                            .category("Television")
-                                            .subcategory("4KTV")
-                                            .height(10)
-                                            .width(30)
-                                            .diagonalSize(55)
-                                            .price(BigDecimal.valueOf(50000.00))
-                                            .color("Black")
-                                            .brand("Sony")
-                                            .techSpec("4k TV").build();
+                .id(1L)
+                .manufactureYear("2023")
+                .depth(5)
+                .name("TV")
+                .category("Television")
+                .subcategory("4KTV")
+                .height(10)
+                .width(30)
+                .diagonalSize(55)
+                .price(BigDecimal.valueOf(50000.00))
+                .color("Black")
+                .brand("Sony")
+                .techSpec("4k TV").build();
     }
 
     @Test
@@ -62,9 +62,9 @@ class CatalogueControllerTest {
 
         mockMvc.perform(get("/subcategory/4KTV")
                         .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.color")
-                                            .value(productCatalogue.getColor()));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.color")
+                        .value(productCatalogue.getColor()));
     }
 
     @Test
@@ -104,6 +104,6 @@ class CatalogueControllerTest {
                                 "    \"diagonalSize\": 55,\n" +
                                 "    \"manufactureYear\": \"2023\"\n" +
                                 "}"))
-                        .andExpect(status().isOk());
+                .andExpect(status().isOk());
     }
 }

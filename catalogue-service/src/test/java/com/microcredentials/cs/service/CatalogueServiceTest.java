@@ -30,19 +30,19 @@ class CatalogueServiceTest {
     void setUp() {
         List<ProductCatalogue> productCatalogueList = new ArrayList<ProductCatalogue>();
         productCatalogueList.add(ProductCatalogue.builder()
-                                                    .id(1L)
-                                                    .manufactureYear("2023")
-                                                    .depth(5)
-                                                    .name("TV")
-                                                    .category("Television")
-                                                    .subcategory("4KTV")
-                                                    .height(10)
-                                                    .width(30)
-                                                    .diagonalSize(55)
-                                                    .price(BigDecimal.valueOf(50000.00))
-                                                    .color("Black")
-                                                    .brand("Sony")
-                                                    .techSpec("4k TV").build());
+                .id(1L)
+                .manufactureYear("2023")
+                .depth(5)
+                .name("TV")
+                .category("Television")
+                .subcategory("4KTV")
+                .height(10)
+                .width(30)
+                .diagonalSize(55)
+                .price(BigDecimal.valueOf(50000.00))
+                .color("Black")
+                .brand("Sony")
+                .techSpec("4k TV").build());
 
         Mockito.when(catalogueRepository.findAll())
                 .thenReturn(productCatalogueList);
