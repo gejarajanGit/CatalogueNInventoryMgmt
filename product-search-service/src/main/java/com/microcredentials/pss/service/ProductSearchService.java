@@ -25,7 +25,7 @@ public class ProductSearchService {
     public List<Inventory> getProducts() throws ProductNotFoundException {
         List<Inventory> inventoryList = inventoryRepository.findAll();
         if (inventoryList.size()==0)
-            throw new ProductNotFoundException("No product found currently");
+            throw new ProductNotFoundException("No product found currently :(");
         return inventoryList;
     }
 
@@ -34,14 +34,14 @@ public class ProductSearchService {
                 .filter(inventory -> inventory.getQuantity()>0)
                 .collect(Collectors.toList());
         if (inventoryList.size()==0)
-            throw new ProductNotFoundException("No in-hand product found currently");
+            throw new ProductNotFoundException("No in-hand product found currently :(");
         return inventoryList;
     }
 
     public Inventory getProductById(int productId) throws ProductNotFoundException {
         Optional<Inventory> inventory = inventoryRepository.findByProductId(productId);
         if(!inventory.isPresent())
-            throw new ProductNotFoundException("No product found with product Id : " + productId);
+            throw new ProductNotFoundException("No product found with product Id: " + productId + " :(");
         return inventory.get();
     }
 
@@ -53,11 +53,16 @@ public class ProductSearchService {
     }
 
     public ProductCatalogue getProductCatalogue(String brand, String color) throws ProductNotFoundException {
-        ProductCatalogue productCatalogue = restTemplate
-                .getForObject("http://CATALOGUE-SERVICE/api/catalogue/product?brand="+brand+"&color="+color,
-                        ProductCatalogue.class);
+        ProductCatalogue productCatalogue = null;
+        try{
+            productCatalogue = restTemplate
+                    .getForObject("http://CATALOGUE-SERVICE/api/catalogue/product?brand="+brand+"&color="+color,
+                            ProductCatalogue.class);
+        }catch(Exception ex){
+            throw new ProductNotFoundException("No Catalogue found with the brand : " + brand + " and color : " + color + " :(");
+        }
         if(productCatalogue==null)
-            throw new ProductNotFoundException("No Catalogue found with the brand : " + brand + " and color : " + color);
+            throw new ProductNotFoundException("No Catalogue found with the brand : " + brand + " and color : " + color + " :(");
         return productCatalogue;
     }
 }

@@ -17,28 +17,31 @@ public class CatalogueService {
     @Autowired
     CatalogueRepository catalogueRepository;
 
-    public List<ProductCatalogue> getCatalogue(){
-        return catalogueRepository.findAll();
+    public List<ProductCatalogue> getCatalogue() throws ProductCatalogueNotFoundException {
+        List<ProductCatalogue> productCatalogueList =  catalogueRepository.findAll();
+        if(productCatalogueList.size()==0)
+            throw new ProductCatalogueNotFoundException("No product catalogues found :(");
+        return productCatalogueList;
     }
 
     public List<ProductCatalogue> getProductsByCategory(String category) throws ProductCatalogueNotFoundException {
         List<ProductCatalogue> productCatalogueList = catalogueRepository.findByCategory(category);
         if(productCatalogueList.size()==0)
-            throw new ProductCatalogueNotFoundException("No product catalogues found");
+            throw new ProductCatalogueNotFoundException("No product catalogues found for category: " + category + " :(");
         return productCatalogueList;
     }
 
     public List<ProductCatalogue> getProductOfSubcategory(String subcategory) throws ProductCatalogueNotFoundException {
         List<ProductCatalogue> productCatalogueList =  catalogueRepository.findBySubcategory(subcategory);
         if(productCatalogueList.size()==0)
-            throw new ProductCatalogueNotFoundException("No product catalogues found");
+            throw new ProductCatalogueNotFoundException("No product catalogues found for subcategory: " + subcategory + " :(");
         return productCatalogueList;
     }
 
     public ProductCatalogue getProduct(String brand, String color) throws ProductCatalogueNotFoundException {
         Optional<ProductCatalogue> productCatalogue = catalogueRepository.findByBrandAndColor(brand, color);
         if(!productCatalogue.isPresent())
-            throw new ProductCatalogueNotFoundException("Product catalogue not found exception");
+            throw new ProductCatalogueNotFoundException("Product catalogue not found with the brand name: " + brand + " and color: " + color + " :(");
         return productCatalogue.get();
     }
 

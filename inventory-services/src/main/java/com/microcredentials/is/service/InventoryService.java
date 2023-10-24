@@ -18,29 +18,34 @@ public class InventoryService {
     RestTemplate restTemplate;
 
     public Inventory getInventoryOfProduct(int productId) throws InventoryNotFoundException {
-        Inventory inventory = restTemplate
+        Inventory inventory = null;
+        try{
+            inventory = restTemplate
                     .getForObject("http://PRODUCT-SEARCH-SERVICE/api/search/product/"+productId,
                             Inventory.class);
+        }catch(Exception ex){
+            throw new InventoryNotFoundException("No inventory found with product Id " + productId);
+        }
         if(inventory==null)
-            throw new InventoryNotFoundException("No inventory found with product Id");
+            throw new InventoryNotFoundException("No inventory found with product Id " + productId);
         return inventory;
     }
 
     public String addInventory(Inventory inventory) {
         publishMessage(inventory);
-        return "Inventory data has been sent out to queue for insertion";
+        return "Inventory data has been sent out to queue for insertion with the inventory data " + inventory.toString();
     }
 
     public String addInventory(List<Inventory> inventoryList) {
         for(Inventory inventory : inventoryList){
             publishMessage(inventory);
         }
-        return "Inventory list  has been sent out to queue for insertion";
+        return "Inventory list has been sent out to queue for insertion with the inventory data " + inventoryList.toString();
     }
 
     public String reduceInventory(Inventory inventory) {
         publishMessage(inventory);
-        return "Count reduction has been sent out to queue to be updated";
+        return "Count reduction has been sent out to queue to be updated with the inventory data " + inventory.toString();
     }
 
     public void publishMessage(Inventory inventory){

@@ -27,7 +27,7 @@ public class CatalogueController {
     public static final Logger LOGGER = LoggerFactory.getLogger(CatalogueController.class);
 
     @GetMapping("/allProducts")
-    public List<ProductCatalogue> getCatalogue(){
+    public List<ProductCatalogue> getCatalogue() throws ProductCatalogueNotFoundException {
         LOGGER.info("Getting all the catalogues");
         return catalogueService.getCatalogue();
     }

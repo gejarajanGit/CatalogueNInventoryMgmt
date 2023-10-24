@@ -50,7 +50,7 @@ class CatalogueServiceTest {
 
     @Test
     @Disabled
-    void fetchAllCatalogues() {
+    void fetchAllCatalogues() throws ProductCatalogueNotFoundException {
         String brand = "Sony";
         String color = "Black";
         List<ProductCatalogue> productCatalogue = catalogueService.getCatalogue();
