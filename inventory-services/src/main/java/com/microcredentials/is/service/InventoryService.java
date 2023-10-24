@@ -1,5 +1,6 @@
 package com.microcredentials.is.service;
 
+import com.microcredentials.is.error.InventoryNotFoundException;
 import com.microcredentials.is.model.Inventory;
 import com.microcredentials.is.mq.MQConfig;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -16,24 +17,35 @@ public class InventoryService {
     @Autowired
     RestTemplate restTemplate;
 
-    public Inventory getInventoryOfProduct(int productId) {
-        return restTemplate
+    public Inventory getInventoryOfProduct(int productId) throws InventoryNotFoundException {
+        Inventory inventory = null;
+        try{
+            inventory = restTemplate
                     .getForObject("http://PRODUCT-SEARCH-SERVICE/api/search/product/"+productId,
                             Inventory.class);
+        }catch(Exception ex){
+            throw new InventoryNotFoundException("No inventory found with product Id " + productId);
+        }
+        if(inventory==null)
+            throw new InventoryNotFoundException("No inventory found with product Id " + productId);
+        return inventory;
     }
 
-    public void addInventory(Inventory inventory) {
+    public String addInventory(Inventory inventory) {
         publishMessage(inventory);
+        return "Inventory data has been sent out to queue for insertion with the inventory data " + inventory.toString();
     }
 
-    public void addInventory(List<Inventory> inventoryList) {
+    public String addInventory(List<Inventory> inventoryList) {
         for(Inventory inventory : inventoryList){
             publishMessage(inventory);
         }
+        return "Inventory list has been sent out to queue for insertion with the inventory data " + inventoryList.toString();
     }
 
-    public void reduceInventory(Inventory inventory) {
+    public String reduceInventory(Inventory inventory) {
         publishMessage(inventory);
+        return "Count reduction has been sent out to queue to be updated with the inventory data " + inventory.toString();
     }
 
     public void publishMessage(Inventory inventory){

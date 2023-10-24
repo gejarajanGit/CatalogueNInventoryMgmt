@@ -17,9 +17,8 @@ spring:
     hibernate:
       ddl-auto: create-drop
   rabbitmq:
-    addresses: localhost:5672
-
-
+    host: host.docker.internal
+    addresses: host.docker.internal:5672
 #Relilience4j properties
 resilience4j:
   circuitbreaker:

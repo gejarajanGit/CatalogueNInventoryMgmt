@@ -15,4 +15,5 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
   rabbitmq:
-    addresses: localhost:5672
+    host: host.docker.internal
+    addresses: host.docker.internal:5672

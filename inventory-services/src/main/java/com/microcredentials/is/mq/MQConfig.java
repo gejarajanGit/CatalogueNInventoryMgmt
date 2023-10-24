@@ -14,6 +14,8 @@ public class MQConfig {
     public static final String EXCHANGE = "message_exchange";
     public static final String ROUTING_KEY = "message_routingKey";
 
+    /*Docker run command
+    docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.12-management*/
     @Bean
     public Queue queue(){
         return new Queue(QUEUE);
