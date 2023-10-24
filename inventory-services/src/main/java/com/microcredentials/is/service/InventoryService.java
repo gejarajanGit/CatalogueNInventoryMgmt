@@ -1,5 +1,6 @@
 package com.microcredentials.is.service;
 
+import com.microcredentials.is.error.InventoryNotFoundException;
 import com.microcredentials.is.model.Inventory;
 import com.microcredentials.is.mq.MQConfig;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -16,25 +17,30 @@ public class InventoryService {
     @Autowired
     RestTemplate restTemplate;
 
-    public Inventory getInventoryOfProduct(int productId) {
-        return restTemplate
+    public Inventory getInventoryOfProduct(int productId) throws InventoryNotFoundException {
+        Inventory inventory = restTemplate
                     .getForObject("http://PRODUCT-SEARCH-SERVICE/api/search/product/"+productId,
                             Inventory.class);
-    }
-
-    public Inventory addInventory(Inventory inventory) {
-        publishMessage(inventory);
+        if(inventory==null)
+            throw new InventoryNotFoundException("No inventory found with product Id");
         return inventory;
     }
 
-    public void addInventory(List<Inventory> inventoryList) {
+    public String addInventory(Inventory inventory) {
+        publishMessage(inventory);
+        return "Inventory data has been sent out to queue for insertion";
+    }
+
+    public String addInventory(List<Inventory> inventoryList) {
         for(Inventory inventory : inventoryList){
             publishMessage(inventory);
         }
+        return "Inventory list  has been sent out to queue for insertion";
     }
 
-    public void reduceInventory(Inventory inventory) {
+    public String reduceInventory(Inventory inventory) {
         publishMessage(inventory);
+        return "Count reduction has been sent out to queue to be updated";
     }
 
     public void publishMessage(Inventory inventory){

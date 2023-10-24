@@ -1,5 +1,6 @@
 package com.microcredentials.pss.service;
 
+import com.microcredentials.pss.error.ProductNotFoundException;
 import com.microcredentials.pss.model.Inventory;
 import com.microcredentials.pss.model.ProductCatalogue;
 import com.microcredentials.pss.mq.MQConfig;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,18 +22,27 @@ public class ProductSearchService {
     @Autowired
     RestTemplate restTemplate;
 
-    public List<Inventory> getProducts() {
-        return inventoryRepository.findAll();
+    public List<Inventory> getProducts() throws ProductNotFoundException {
+        List<Inventory> inventoryList = inventoryRepository.findAll();
+        if (inventoryList.size()==0)
+            throw new ProductNotFoundException("No product found currently");
+        return inventoryList;
     }
 
-    public List<Inventory> getProductsInHand() {
-        return getProducts().stream()
+    public List<Inventory> getProductsInHand() throws ProductNotFoundException {
+        List<Inventory> inventoryList = getProducts().stream()
                 .filter(inventory -> inventory.getQuantity()>0)
                 .collect(Collectors.toList());
+        if (inventoryList.size()==0)
+            throw new ProductNotFoundException("No in-hand product found currently");
+        return inventoryList;
     }
 
-    public Inventory getProductById(int productId){
-        return inventoryRepository.findByProductId(productId);
+    public Inventory getProductById(int productId) throws ProductNotFoundException {
+        Optional<Inventory> inventory = inventoryRepository.findByProductId(productId);
+        if(!inventory.isPresent())
+            throw new ProductNotFoundException("No product found with product Id : " + productId);
+        return inventory.get();
     }
 
     @RabbitListener(queues = MQConfig.QUEUE)
@@ -41,9 +52,12 @@ public class ProductSearchService {
         System.out.println("Message persisted");
     }
 
-    public ProductCatalogue getProductCatalogue(String brand, String color) {
-        return restTemplate
+    public ProductCatalogue getProductCatalogue(String brand, String color) throws ProductNotFoundException {
+        ProductCatalogue productCatalogue = restTemplate
                 .getForObject("http://CATALOGUE-SERVICE/api/catalogue/product?brand="+brand+"&color="+color,
                         ProductCatalogue.class);
+        if(productCatalogue==null)
+            throw new ProductNotFoundException("No Catalogue found with the brand : " + brand + " and color : " + color);
+        return productCatalogue;
     }
 }
